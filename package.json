@@ -1,6 +1,6 @@
 {
   "name": "@twahanur/cu",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Keep ClickUp in sync from the terminal and from git: plan the day, start/finish tasks, log every commit, see who works on what. Works with Claude Code.",
   "type": "module",
   "bin": {
@@ -37,5 +37,6 @@
   "bugs": {
     "url": "https://github.com/twahanur/cu-clickup/issues"
   },
-  "author": "Twahanur Rahman"
+  "author": "Twahanur Rahman",
+  "cuInstall": "github:twahanur/cu-clickup"
 }

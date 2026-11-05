@@ -38,41 +38,61 @@ the work you already do:
 - Nothing is written to your repository's tracked files
 - Zero runtime dependencies. Needs Node 18.17 or later and git.
 
-## Installation
+## Get started
+
+Open a terminal in your project and run **one command**:
 
 ```bash
-npm install -g github:twahanur/cu-clickup
+npx github:twahanur/cu-clickup
 ```
 
-Check it:
+A short guided setup follows. It takes about a minute:
+
+```
+👋 cu setup for my-app
+
+Step 1 of 2 · ClickUp token
+  Open that page in your browser now? [Y/n]           ← opens ClickUp → Settings → Apps
+  Paste the token (starts with pk_, it will not be shown):
+  ✔ signed in as Jane Doe
+
+Step 2 of 2 · Which ClickUp space is my-app tracked in?
+   1) Marketing
+   2) Product
+  Type a number: 2
+  ✔ space: Product
+  ✔ your list: 👤 Jane Doe (your new tasks go here)
+  ✔ git hooks on in my-app
+
+Install the `cu` command permanently? [Y/n]
+
+🎉 All set: commits in my-app are now logged in ClickUp.
+```
+
+That's it. For your next project, open it and run `cu setup` (or just `cu`). The token is remembered, so only the
+space question is asked.
+
+<details>
+<summary>Other ways to install</summary>
 
 ```bash
-cu version
+npm install -g github:twahanur/cu-clickup   # install the command first
+cd path/to/your-repo && cu setup            # then link each repo
 ```
 
-## Quick start
+Without a terminal prompt (scripts, CI): `cu setup --token pk_... --space "Product"`.
 
-**1. Get a ClickUp API token.**
-In ClickUp, open your avatar → **Settings** → **Apps** → **API Token** → **Generate**. It starts with `pk_`.
+</details>
 
-**2. Link a repository.**
+**Something not working?** Run `cu doctor`. It checks Node, git, your token, the repo link and the hooks, and
+prints the fix for anything that is wrong.
 
-```bash
-cd path/to/your-repo
-cu setup
-```
+**What setup changes:** your token goes to `~/.config/clickup/token` (readable only by you), the repo gets local
+git settings and hooks, and a git-ignored `CLAUDE.local.md` is written for Claude Code. Nothing is committed.
 
-`cu setup` will:
+### Your first day
 
-1. ask for your token the first time and store it in `~/.config/clickup/token` (mode `600`)
-2. list your ClickUp spaces and ask which one this repo belongs to
-3. create your personal list **👤 Your Name** in that space, where your new tasks go
-4. turn on the git hooks for this repo
-5. write a git-ignored `CLAUDE.local.md` with the workflow rules for Claude Code
 
-Run `cu setup` once in every repository you work in. Each repo can point to a different space.
-
-**3. Work as usual.**
 
 ```bash
 cu today "Login page" "Password reset email"   # plan the day: two tasks in todo
@@ -109,7 +129,8 @@ cu finish "Login page with validation"          # summary, then in review
 
 | Command | Effect |
 |---|---|
-| `cu setup [--space <name>] [--token pk_...]` | Links the repo, switches its space, or replaces the token |
+| `cu setup` (or just `cu`) | Guided setup: token, space, hooks. Rerun to switch space. Flags: `--space <name>`, `--token pk_...` |
+| `cu doctor` | Checks everything and prints the fix for each problem |
 | `cu add "<title>" [--list L] [--parent REF] [--desc D]` | Creates one task in **todo**, or a subtask with `--parent` |
 | `cu status <ref> <status>` | Sets any status of the space |
 | `cu pr [<ref>] <url>` | Fills a PR link field if the list has one, then moves to **in review** |
@@ -198,9 +219,10 @@ Each linked repository gets only local git settings: `clickup.space`, `clickup.w
 
 | Problem | Fix |
 |---|---|
-| `cu: command not found` | Make sure npm's global bin folder is on your `PATH` (`npm prefix -g`) |
-| `This repo is not linked to a ClickUp space yet` | Run `cu setup` in that repo |
-| `Token rejected by ClickUp` | `cu setup --token pk_...` with a fresh token |
+| Not sure what is wrong | `cu doctor` |
+| `cu: command not found` | `npm i -g github:twahanur/cu-clickup`, and make sure `$(npm prefix -g)/bin` is on your `PATH` |
+| `... is not linked to a ClickUp space yet` | Answer **Y** when `cu` offers to set it up, or run `cu setup` |
+| `ClickUp did not accept that token` | Copy a fresh token and run `cu setup` again |
 | Commits are not logged | Run `cu setup` in the repo, then check `git config core.hooksPath` |
 | `This space has no "blocked" status` | Expected for spaces without that status. See `cu statuses` |
 
