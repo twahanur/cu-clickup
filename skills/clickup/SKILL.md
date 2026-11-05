@@ -21,12 +21,17 @@ name, or `.` for the current task.
 | The work is finished and tests pass | `clickup_finish_task` with a short summary | `cu finish "<summary>"` |
 | A pull request is opened | `clickup_pr` | `cu pr <url>` |
 | Waiting on someone or something | `clickup_block_task` | `cu block "<what you wait for>"` |
+| A break, the work stays current | `clickup_pause_timer` | `cu pause` |
+| The user gives the task to a teammate | `clickup_handoff` | `cu handoff <person> "<note>"` |
+| End of day, or "what did I do today?" | `clickup_daily_report` | `cu report` |
 | "Who is working on what?" ("কে কী করছে") | `clickup_team` | `cu team` |
 
 Rules:
 1. Do these yourself, without asking first, and tell the user in one short line what you changed in ClickUp.
 2. `start` finds a matching task or creates one, so start the real task before writing code. Commits are logged by
-   a git hook on the current task; with no current task they go to a catch-all task for the day.
+   a git hook on the current task; with no current task they go to a catch-all task for the day. Pass a due date
+   or priority only when the user mentions one (due: today, tomorrow, fri, +3d, 2026-12-01; priority: urgent,
+   high, normal, low).
 3. Write summaries and comments for the teammate who reads them: what changed, what is left, what blocks.
 4. Never mark a task done unless the user confirms it is merged and tested. Never change another person's task.
 5. If cusync says the repo is not set up, ask the user to run `npx cusync` in a terminal in this folder (it is

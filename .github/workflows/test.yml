@@ -1,0 +1,65 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  CI: true
+
+jobs:
+  test:
+    name: test (${{ matrix.os }}, node ${{ matrix.node }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: [18, 20, 22]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Set git identity (tests create temp repos and commit)
+        shell: bash
+        run: |
+          git config --global user.email "ci@example.com"
+          git config --global user.name "CI"
+          git config --global init.defaultBranch main
+
+      - name: Run tests (explicit file list, no shell globbing)
+        shell: bash
+        run: >-
+          node -e "const fs=require('fs');
+          const files=fs.readdirSync('test').filter(f=>f.endsWith('.test.js')).sort().map(f=>'test/'+f);
+          if(!files.length){console.error('no test files found');process.exit(1)}
+          console.log('node --test '+files.join(' '));
+          require('child_process').execFileSync(process.execPath,['--test',...files],{stdio:'inherit'})"
+
+  plugin:
+    name: plugin manifests + npm pack
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate JSON files parse
+        run: |
+          for f in .claude-plugin/plugin.json .claude-plugin/marketplace.json hooks/hooks.json package.json; do
+            node -e "JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'))" "$f" \
+              && echo "ok  $f" \
+              || { echo "::error file=$f::invalid JSON"; exit 1; }
+          done
+
+      - name: npm pack --dry-run
+        run: npm pack --dry-run

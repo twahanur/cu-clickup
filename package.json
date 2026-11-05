@@ -1,6 +1,6 @@
 {
   "name": "cusync",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Keep ClickUp in sync from your terminal, git and AI agents (Claude Code, Cursor, MCP): plan the day, start/finish tasks, log every commit, see who works on what.",
   "type": "module",
   "bin": {
@@ -18,7 +18,7 @@
     "node": ">=18.17"
   },
   "scripts": {
-    "test": "node --test test/*.test.js",
+    "test": "node scripts/test.js",
     "build:skill": "node scripts/build-skill.js"
   },
   "keywords": [
