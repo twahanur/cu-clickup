@@ -321,3 +321,11 @@ test("parseDue rejects words that only start like a weekday", async () => {
   assert.equal(new Date(parseDue("tue", now)).getDate(), 10);
   assert.equal(new Date(parseDue("tuesday", now)).getDate(), 10);
 });
+
+test("a missing token is reported as setup, not as a network problem", () => {
+  const conf = fs.mkdtempSync(path.join(os.tmpdir(), "cu-notoken-"));
+  const r = spawnSync(process.execPath, [BIN, "doctor"],
+    { encoding: "utf8", env: { ...process.env, CU_CONFIG_DIR: conf, CLICKUP_API_TOKEN: "", CI: "1" } });
+  assert.match(r.stdout, /no working ClickUp token/);
+  assert.doesNotMatch(r.stdout, /cannot be reached/);
+});
