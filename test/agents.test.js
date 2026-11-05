@@ -9,7 +9,7 @@ import { skill } from "../scripts/build-skill.js";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CU = path.join(ROOT, "bin", "cu.js");
-const tmp = () => fs.mkdtempSync(path.join(os.tmpdir(), "cusync-test-"));
+const tmp = () => fs.mkdtempSync(path.join(os.tmpdir(), "clickup-flow-test-"));
 
 function mcp(messages, env, cwd) {
   return new Promise((resolve, reject) => {
@@ -51,14 +51,14 @@ test("MCP server: handshake, tool list, and a clear answer when not set up", asy
   ], { CU_CONFIG_DIR: conf, CLICKUP_API_TOKEN: "" }, cwd);
   const by = Object.fromEntries(res.map((r) => [r.id, r]));
   assert.equal(res.length, 7, "one reply per request, none for the notification");
-  assert.equal(by[1].result.serverInfo.name, "cusync");
+  assert.equal(by[1].result.serverInfo.name, "clickup-flow");
   assert.equal(by[1].result.protocolVersion, "2025-06-18");
   assert.match(by[1].result.instructions, /clickup_start_task/);
   const names = by[2].result.tools.map((t) => t.name);
   for (const n of ["clickup_plan_day", "clickup_start_task", "clickup_finish_task", "clickup_team", "clickup_comment"]) assert.ok(names.includes(n), n);
   assert.ok(by[2].result.tools.every((t) => t.inputSchema.type === "object" && !("run" in t)));
   assert.equal(by[3].result.isError, true);
-  assert.match(by[3].result.content[0].text, /npx cusync/);
+  assert.match(by[3].result.content[0].text, /npx clickup-flow/);
   assert.equal(by[4].result.isError, true);
   assert.equal(by[5].error.code, -32602);
   assert.equal(by[6].error.code, -32601);
@@ -73,7 +73,7 @@ test("session-start hook: silent outside git, a hint in an unlinked repo, Claude
   assert.equal(run(plain), "");
   const claude = JSON.parse(run(repo));
   assert.equal(claude.hookSpecificOutput.hookEventName, "SessionStart");
-  assert.match(claude.hookSpecificOutput.additionalContext, /npx cusync/);
+  assert.match(claude.hookSpecificOutput.additionalContext, /npx clickup-flow/);
   const cursor = JSON.parse(run(repo, { CURSOR_PLUGIN_ROOT: "/x" }));
   assert.match(cursor.additional_context, /not linked/);
 });

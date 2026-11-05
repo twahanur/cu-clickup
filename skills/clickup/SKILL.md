@@ -1,11 +1,11 @@
 ---
 name: clickup
-description: Keep ClickUp in sync while coding with cusync. Use when the user says what they will work on (today's plan), before starting or after finishing a piece of work, when a PR is opened, when work is blocked, or when they ask who is working on what. Applies in repos linked with cusync.
+description: Keep ClickUp in sync while coding with clickup-flow. Use when the user says what they will work on (today's plan), before starting or after finishing a piece of work, when a PR is opened, when work is blocked, or when they ask who is working on what. Applies in repos linked with clickup-flow.
 ---
 
 ## ClickUp: keep it in sync without being asked
 
-Work in this repo is tracked in ClickUp with **cusync**. Keep ClickUp up to
+Work in this repo is tracked in ClickUp with **clickup-flow**. Keep ClickUp up to
 date on your own while you work, for the developer you work with. Prefer the `clickup_*` MCP tools when you
 have them; otherwise run the `cu` command in the terminal (`cu` alone prints usage). The token and config live in
 `~/.config/clickup/`: never print the token and never copy that folder or this section into tracked files.
@@ -34,6 +34,6 @@ Rules:
    high, normal, low).
 3. Write summaries and comments for the teammate who reads them: what changed, what is left, what blocks.
 4. Never mark a task done unless the user confirms it is merged and tested. Never change another person's task.
-5. If cusync says the repo is not set up, ask the user to run `npx cusync` in a terminal in this folder (it is
+5. If clickup-flow says the repo is not set up, ask the user to run `npx clickup-flow` in a terminal in this folder (it is
    interactive), then carry on. If ClickUp is unreachable, say so in one line and carry on with the code; never
    retry in a loop.

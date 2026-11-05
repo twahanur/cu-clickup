@@ -4,7 +4,7 @@ import { agentRules } from "../lib/cu.js";
 
 export const skill = `---
 name: clickup
-description: Keep ClickUp in sync while coding with cusync. Use when the user says what they will work on (today's plan), before starting or after finishing a piece of work, when a PR is opened, when work is blocked, or when they ask who is working on what. Applies in repos linked with cusync.
+description: Keep ClickUp in sync while coding with clickup-flow. Use when the user says what they will work on (today's plan), before starting or after finishing a piece of work, when a PR is opened, when work is blocked, or when they ask who is working on what. Applies in repos linked with clickup-flow.
 ---
 
 ${agentRules("")}`;

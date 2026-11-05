@@ -10,7 +10,7 @@ You will get an answer within a few days, and a fix is released as soon as possi
 
 ## Supported versions
 
-Only the latest published version receives security fixes. Update with `npm i -g cusync@latest`.
+Only the latest published version receives security fixes. Update with `npm i -g clickup-flow@latest`.
 
 ## Scope
 

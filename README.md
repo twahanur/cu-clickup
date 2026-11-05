@@ -1,13 +1,13 @@
 <div align="center">
 
-# cusync
+# clickup-flow
 
-**ClickUp from your terminal and git.** Install with `npx cusync`, then use the `cu` command.
+**ClickUp from your terminal and git.** Install with `npx clickup-flow`, then use the `cu` command.
 
 Plan the day, start and finish tasks, and log every commit on the task you are working on,
 without leaving the terminal and without defining tasks in advance.
 
-[![npm](https://img.shields.io/npm/v/cusync.svg)](https://www.npmjs.com/package/cusync)
+[![npm](https://img.shields.io/npm/v/clickup-flow.svg)](https://www.npmjs.com/package/clickup-flow)
 [![Tests](https://github.com/twahanur/cu-clickup/actions/workflows/test.yml/badge.svg)](https://github.com/twahanur/cu-clickup/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D18.17-brightgreen.svg)](https://nodejs.org)
@@ -54,7 +54,7 @@ the work you already do:
 Open a terminal in your project and run **one command**:
 
 ```bash
-npx cusync
+npx clickup-flow
 ```
 
 A short guided setup follows. It takes about a minute:
@@ -88,7 +88,7 @@ and run `cu setup` (or just `cu`). The token is remembered, so only the space qu
 <summary>Other ways to install</summary>
 
 ```bash
-npm i -g cusync                    # install the `cu` command first
+npm i -g clickup-flow                    # install the `cu` command first
 cd path/to/your-repo && cu setup   # then link each repo
 ```
 
@@ -195,7 +195,7 @@ A `<ref>` can be:
 
 ### Merged pull requests
 
-`cu github-action` writes `.github/workflows/cusync-merged.yml`. When a pull request is merged, the workflow finds
+`cu github-action` writes `.github/workflows/clickup-flow-merged.yml`. When a pull request is merged, the workflow finds
 every `CU-<id>` in its title, body, branch name and commits, moves those tasks to **done** and comments the PR
 link on each. Commits made with `cu` already carry their `CU-<id>`.
 
@@ -259,7 +259,7 @@ after that the commit log is queued like an offline one, so git is never held up
 
 **Hooks never block git.** Any error inside a hook is printed as one line and the commit or checkout goes through.
 
-**Updates.** Once a day, in a terminal, `cu` checks whether a newer cusync is published on npm and prints one line
+**Updates.** Once a day, in a terminal, `cu` checks whether a newer clickup-flow is published on npm and prints one line
 if so. The check takes at most 1.5 seconds, never runs in hooks or CI, and can be turned off with
 `cu config update_check off`.
 
@@ -277,23 +277,23 @@ of git:
 | Agent | File |
 |---|---|
 | Claude Code | `CLAUDE.local.md` |
-| Cursor | `.cursor/rules/cusync.mdc` |
+| Cursor | `.cursor/rules/clickup-flow.mdc` |
 | Codex, GitHub Copilot, Windsurf and other `AGENTS.md` readers | `AGENTS.md` (skipped if your repo already tracks one) |
 
 **2. Claude Code plugin.** It adds a `clickup` skill, the MCP tools below, and a session hook that tells Claude which
 task is current when a session starts. Run this once inside Claude Code:
 
 ```
-/plugin install cusync --marketplace twahanur/cu-clickup
+/plugin install clickup-flow --marketplace twahanur/cu-clickup
 ```
 
-On older Claude Code versions: `/plugin marketplace add twahanur/cu-clickup`, then `/plugin install cusync@cusync`.
+On older Claude Code versions: `/plugin marketplace add twahanur/cu-clickup`, then `/plugin install clickup-flow@clickup-flow`.
 
 **3. MCP server (Cursor, Claude Desktop, Windsurf, VS Code and any MCP client).** Your agent calls ClickUp tools
 directly instead of typing commands. `cu agents` adds it to Cursor for you and prints the config for other clients:
 
 ```json
-{ "mcpServers": { "cusync": { "command": "npx", "args": ["-y", "cusync", "mcp"] } } }
+{ "mcpServers": { "clickup-flow": { "command": "npx", "args": ["-y", "clickup-flow", "mcp"] } } }
 ```
 
 | Tool | Does |
@@ -314,7 +314,7 @@ directly instead of typing commands. `cu agents` adds it to Cursor for you and p
 Each tool takes an optional `repo_path` for agents that work across several projects.
 
 **What agents do on their own.** They change only your own tasks, tell you in one line what they changed, never mark
-a task done until you confirm it is merged and tested, and ask you to run `npx cusync` if a repo is not set up yet.
+a task done until you confirm it is merged and tested, and ask you to run `npx clickup-flow` if a repo is not set up yet.
 The token never reaches the agent: the tools run locally with the token on your machine.
 
 ## Configuration
@@ -327,7 +327,7 @@ prints one, and `cu config <name> <value>` changes it.
 | `lang` | `en`, `bn` | `en` | Language of the names and reports `cu` writes: the catch-all task and `cu report` |
 | `timer` | `on`, `off` | `on` | Start and stop ClickUp time tracking with `cu start`, `pause`, `finish`, `block`, `handoff` |
 | `commit_tag` | `on`, `off` | `on` | Add `CU-<id>` of the current task to commit messages |
-| `update_check` | `on`, `off` | `on` | Say once a day when a newer cusync is published |
+| `update_check` | `on`, `off` | `on` | Say once a day when a newer clickup-flow is published |
 | `slack_webhook` | a `https://hooks.slack.com/services/...` URL, or `off` | not set | Where `cu report --slack` posts |
 | `token_store` | `file`, `keychain` | `file` | Where the token is kept. Changing it moves the token |
 
@@ -382,7 +382,7 @@ Found a security problem? See [SECURITY.md](SECURITY.md).
 | Problem | Fix |
 |---|---|
 | Not sure what is wrong | `cu doctor` |
-| `cu: command not found` | `npm i -g cusync`, and make sure `$(npm prefix -g)/bin` is on your `PATH` |
+| `cu: command not found` | `npm i -g clickup-flow`, and make sure `$(npm prefix -g)/bin` is on your `PATH` |
 | `... is not linked to a ClickUp space yet` | Answer **Y** when `cu` offers to set it up, or run `cu setup` |
 | `ClickUp did not accept that token` | Copy a fresh token and run `cu setup` again |
 | Commits are not logged | Run `cu setup` in the repo, then check `git config core.hooksPath` |
@@ -395,24 +395,24 @@ Found a security problem? See [SECURITY.md](SECURITY.md).
 ## Uninstall
 
 ```bash
-cu config token_store file   # first, if the token is in the keychain (or delete the "cusync" keychain item)
+cu config token_store file   # first, if the token is in the keychain (or delete the "clickup-flow" keychain item)
 
 # in each linked repo
 git config --unset core.hooksPath   # turns off all cu hooks, including prepare-commit-msg
 git config --unset clickup.space
 git config --unset clickup.workspace
 git config --unset clickup.spacename
-rm -f CLAUDE.local.md .cursor/rules/cusync.mdc   # or remove only the "cusync" section
-# AGENTS.md: remove the section between <!-- cusync:start --> and <!-- cusync:end -->
-# .github/workflows/cusync-merged.yml: delete it if you added it with cu github-action
+rm -f CLAUDE.local.md .cursor/rules/clickup-flow.mdc   # or remove only the "clickup-flow" section
+# AGENTS.md: remove the section between <!-- clickup-flow:start --> and <!-- clickup-flow:end -->
+# .github/workflows/clickup-flow-merged.yml: delete it if you added it with cu github-action
 
-npm uninstall -g cusync
+npm uninstall -g clickup-flow
 rm -rf ~/.config/clickup
-# Cursor: remove "cusync" from ~/.cursor/mcp.json · Claude Code: /plugin uninstall cusync
+# Cursor: remove "clickup-flow" from ~/.cursor/mcp.json · Claude Code: /plugin uninstall clickup-flow
 ```
 
-If `cu` is already gone, delete the keychain item yourself: `security delete-generic-password -s cusync -a clickup`
-on macOS, or `secret-tool clear service cusync account clickup` on Linux.
+If `cu` is already gone, delete the keychain item yourself: `security delete-generic-password -s clickup-flow -a clickup`
+on macOS, or `secret-tool clear service clickup-flow account clickup` on Linux.
 
 ## Development
 
