@@ -169,8 +169,9 @@ space has no matching status, for example no `blocked`, the status is left alone
 **Commits without a task.** These go to one catch-all task per day, named `🗒 <Name>: অন্যান্য কাজ <date>`
 ("other work"), so a forgotten `cu start` does not create a new task for every commit.
 
-**Branches.** A new branch whose name contains `CU-<id>`, for example `feat/CU-86ex1abcd-login`, starts that
-task when you check it out.
+**Branches.** Creating a branch whose name contains `CU-<id>`, for example
+`git checkout -b feat/CU-86ex1abcd-login`, starts that task. Checking out a colleague's existing branch changes
+nothing.
 
 **Offline.** If ClickUp cannot be reached, the commit still succeeds and its log is saved to
 `~/.config/clickup/queue.json`. The next commit or `cu` command sends it, with the time it was saved.
@@ -210,11 +211,23 @@ Each linked repository gets only local git settings: `clickup.space`, `clickup.w
 
 ## Security and privacy
 
-- The token is stored only on your machine, readable only by you, and sent only to `api.clickup.com`.
-- Nothing is written to tracked files in your repositories.
-- Tasks are created and assigned only to you. `cu` changes another person's task only when you pass that task's
-  reference yourself.
-- Comments are posted with `notify_all: false`, so commit logs do not notify the whole team.
+- **Your token stays on your machine.** It is stored in `~/.config/clickup/token`. The folder is `700` and every
+  file in it is `600`, so other users on the computer cannot read your token, tasks or commit messages.
+- **The token is only sent to `api.clickup.com`.** No other server ever receives it. The test-only
+  `CU_API_BASE` override is refused unless it points to `localhost`, so a hostile environment variable cannot
+  redirect the token. The token is never passed on to other programs that `cu` starts, such as `npm` or the browser.
+- **The prompt hides the token.** `cu setup --token pk_...` also works, but the value then stays in your shell
+  history. Prefer the prompt.
+- **Nothing is committed.** Repos get local git settings and a `CLAUDE.local.md` listed in `.git/info/exclude`. If a
+  repo ships `CLAUDE.local.md` as a symlink, `cu` refuses to write through it.
+- **Hooks are plain, quoted shell scripts** in `~/.config/clickup/hooks/`. You can read them. They never block a
+  commit.
+- **Only your own work is touched.** Tasks are created for you and assigned to you. Name matching only searches
+  your own tasks. Another person's task changes only when you pass its id yourself.
+- **Quiet comments.** Commit logs are posted with `notify_all: false`, so they do not notify the whole team.
+- **No dependencies and no install scripts.** The package is a single readable file, [`lib/cu.js`](lib/cu.js).
+
+Found a security problem? See [SECURITY.md](SECURITY.md).
 
 ## Troubleshooting
 

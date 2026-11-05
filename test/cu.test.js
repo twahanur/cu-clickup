@@ -56,3 +56,30 @@ test("main prints usage for help and fails for unknown commands", async () => {
     console.log = log;
   }
 });
+
+import { apiBase, isId, shQuote } from "../lib/cu.js";
+import { execFileSync } from "node:child_process";
+
+test("the token only goes to ClickUp or localhost", () => {
+  assert.equal(apiBase(undefined), "https://api.clickup.com/api/v2");
+  assert.equal(apiBase("http://127.0.0.1:9/"), "http://127.0.0.1:9");
+  assert.equal(apiBase("http://localhost:3000/api"), "http://localhost:3000/api");
+  assert.throws(() => apiBase("https://evil.example.com/api"));
+  assert.throws(() => apiBase("http://localhost.evil.com"));
+  assert.throws(() => apiBase("not a url"));
+});
+
+test("ids used in API paths are plain alphanumerics", () => {
+  assert.ok(isId("90182584045"));
+  assert.ok(isId("z8rp3ffbf1"));
+  assert.ok(!isId("../user"));
+  assert.ok(!isId("123/comment"));
+  assert.ok(!isId(""));
+  assert.ok(!isId(undefined));
+});
+
+test("shQuote survives quotes, spaces and $ in sh", () => {
+  for (const v of ["/plain/path", "/with space/x", "it's", 'a"b', "$(touch /tmp/pwned)", "`id`"]) {
+    assert.equal(execFileSync("sh", ["-c", `printf %s ${shQuote(v)}`], { encoding: "utf8" }), v);
+  }
+});
