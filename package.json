@@ -1,5 +1,5 @@
 {
-  "name": "@SCOPE/cu",
+  "name": "@twahanur/cu",
   "version": "1.0.0",
   "description": "Keep ClickUp in sync from the terminal and from git: plan the day, start/finish tasks, log every commit, see who works on what. Works with Claude Code.",
   "type": "module",
