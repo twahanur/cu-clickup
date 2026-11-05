@@ -1,0 +1,41 @@
+{
+  "name": "@SCOPE/cu",
+  "version": "1.0.0",
+  "description": "Keep ClickUp in sync from the terminal and from git: plan the day, start/finish tasks, log every commit, see who works on what. Works with Claude Code.",
+  "type": "module",
+  "bin": {
+    "cu": "bin/cu.js"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18.17"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "keywords": [
+    "clickup",
+    "cli",
+    "git-hooks",
+    "task-tracking",
+    "claude-code"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twahanur/cu-clickup.git"
+  },
+  "homepage": "https://github.com/twahanur/cu-clickup#readme",
+  "bugs": {
+    "url": "https://github.com/twahanur/cu-clickup/issues"
+  },
+  "author": "Twahanur Rahman"
+}
