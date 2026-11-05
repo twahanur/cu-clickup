@@ -1,12 +1,13 @@
 <div align="center">
 
-# cu
+# cusync
 
-**ClickUp from your terminal and git.**
+**ClickUp from your terminal and git.** Install with `npx cusync`, then use the `cu` command.
 
 Plan the day, start and finish tasks, and log every commit on the task you are working on,
 without leaving the terminal and without defining tasks in advance.
 
+[![npm](https://img.shields.io/npm/v/cusync.svg)](https://www.npmjs.com/package/cusync)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D18.17-brightgreen.svg)](https://nodejs.org)
 [![Dependencies](https://img.shields.io/badge/dependencies-0-success.svg)](package.json)
@@ -43,7 +44,7 @@ the work you already do:
 Open a terminal in your project and run **one command**:
 
 ```bash
-npx github:twahanur/cu-clickup
+npx cusync
 ```
 
 A short guided setup follows. It takes about a minute:
@@ -76,9 +77,11 @@ space question is asked.
 <summary>Other ways to install</summary>
 
 ```bash
-npm install -g github:twahanur/cu-clickup   # install the command first
-cd path/to/your-repo && cu setup            # then link each repo
+npm i -g cusync                    # install the `cu` command first
+cd path/to/your-repo && cu setup   # then link each repo
 ```
+
+Latest code from GitHub: `npm i -g github:twahanur/cu-clickup`.
 
 Without a terminal prompt (scripts, CI): `cu setup --token pk_... --space "Product"`.
 
@@ -218,7 +221,7 @@ Each linked repository gets only local git settings: `clickup.space`, `clickup.w
 | Problem | Fix |
 |---|---|
 | Not sure what is wrong | `cu doctor` |
-| `cu: command not found` | `npm i -g github:twahanur/cu-clickup`, and make sure `$(npm prefix -g)/bin` is on your `PATH` |
+| `cu: command not found` | `npm i -g cusync`, and make sure `$(npm prefix -g)/bin` is on your `PATH` |
 | `... is not linked to a ClickUp space yet` | Answer **Y** when `cu` offers to set it up, or run `cu setup` |
 | `ClickUp did not accept that token` | Copy a fresh token and run `cu setup` again |
 | Commits are not logged | Run `cu setup` in the repo, then check `git config core.hooksPath` |
@@ -233,7 +236,7 @@ git config --unset clickup.space
 git config --unset clickup.workspace
 rm CLAUDE.local.md          # or remove only the "clickup" section
 
-npm uninstall -g @twahanur/cu
+npm uninstall -g cusync
 rm -rf ~/.config/clickup
 ```
 

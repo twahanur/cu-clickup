@@ -1,10 +1,11 @@
 {
-  "name": "@twahanur/cu",
+  "name": "cusync",
   "version": "1.1.0",
   "description": "Keep ClickUp in sync from the terminal and from git: plan the day, start/finish tasks, log every commit, see who works on what. Works with Claude Code.",
   "type": "module",
   "bin": {
-    "cu": "bin/cu.js"
+    "cu": "bin/cu.js",
+    "cusync": "bin/cu.js"
   },
   "files": [
     "bin",
@@ -23,7 +24,9 @@
     "cli",
     "git-hooks",
     "task-tracking",
-    "claude-code"
+    "claude-code",
+    "clickup-cli",
+    "productivity"
   ],
   "license": "MIT",
   "publishConfig": {
@@ -38,5 +41,5 @@
     "url": "https://github.com/twahanur/cu-clickup/issues"
   },
   "author": "Twahanur Rahman",
-  "cuInstall": "github:twahanur/cu-clickup"
+  "cuInstall": "cusync"
 }
