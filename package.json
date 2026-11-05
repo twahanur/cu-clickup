@@ -1,7 +1,7 @@
 {
   "name": "cusync",
-  "version": "1.1.0",
-  "description": "Keep ClickUp in sync from the terminal and from git: plan the day, start/finish tasks, log every commit, see who works on what. Works with Claude Code.",
+  "version": "1.2.0",
+  "description": "Keep ClickUp in sync from your terminal, git and AI agents (Claude Code, Cursor, MCP): plan the day, start/finish tasks, log every commit, see who works on what.",
   "type": "module",
   "bin": {
     "cu": "bin/cu.js",
@@ -18,7 +18,8 @@
     "node": ">=18.17"
   },
   "scripts": {
-    "test": "node --test test/*.test.js"
+    "test": "node --test test/*.test.js",
+    "build:skill": "node scripts/build-skill.js"
   },
   "keywords": [
     "clickup",
@@ -27,7 +28,11 @@
     "task-tracking",
     "claude-code",
     "clickup-cli",
-    "productivity"
+    "productivity",
+    "mcp",
+    "mcp-server",
+    "ai-agent",
+    "cursor"
   ],
   "license": "MIT",
   "publishConfig": {

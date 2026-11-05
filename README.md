@@ -25,8 +25,8 @@ the work you already do:
 - **Nothing to set up in advance.** `cu start "fix login redirect"` finds the task or creates it.
 - **The board shows who does what.** Every developer gets a personal list in the space, and `cu team` prints
   who is working on what right now.
-- **Works with AI coding agents.** `cu setup` writes rules for [Claude Code](https://claude.com/claude-code) so
-  the agent keeps ClickUp in sync while it works.
+- **Your AI does it for you.** Claude Code, Cursor, Codex, Copilot, Windsurf or any MCP client can drive `cu`: tell
+  it what you will work on today and it keeps ClickUp in sync while it codes.
 
 ## Features
 
@@ -36,6 +36,7 @@ the work you already do:
 - Status names matched to each space (`to do`, `complete`, and so on)
 - Offline queue: commit logs made without a network are sent later
 - A single catch-all task per day for commits made without a current task, so tiny tasks do not pile up
+- Works with AI agents: rules for every agent, a Claude Code plugin, and an MCP server
 - Nothing is written to your repository's tracked files
 - Zero runtime dependencies. Needs Node 18.17 or later and git.
 
@@ -137,6 +138,8 @@ cu finish "Login page with validation"          # summary, then in review
 | `cu pr [<ref>] <url>` | Fills a PR link field if the list has one, then moves to **in review** |
 | `cu bug "<title>" ["<details>"]` | Creates a bug in the space's bug list, or in your own list |
 | `cu tasks [file]` | Writes all your tasks in the space as a Markdown checklist |
+| `cu agents` | Connects your AI tools (Cursor MCP, Claude Code plugin) and prints MCP config for others |
+| `cu mcp` | Runs the MCP server. AI tools start this themselves |
 | `cu version` | Prints the version |
 
 ### Task references
@@ -178,17 +181,56 @@ nothing.
 
 **Hooks never block git.** Any error inside a hook is printed as one line and the commit or checkout goes through.
 
-## Using with Claude Code
+## Use it with AI agents
 
-`cu setup` adds a section to `CLAUDE.local.md` in the repo root. Claude Code loads this file automatically, and the
-section tells the agent to:
+Most of us code with an AI now, so `cu` is built to be driven by one. Tell your agent what you will work on today
+and it plans the tasks, starts the right one before writing code, posts progress, and finishes it with a summary.
+You never type a `cu` command unless you want to.
 
-- turn the list of work you give at the start of the day into tasks with `cu today`
-- run `cu start` before working on something, and `cu finish` when it is done
-- post progress with `cu comment`, and answer "who is working on what" with `cu team`
+There are three ways an agent learns about `cu`. `cu setup` sets up the first one for you and offers the others.
 
-The file is added to `.git/info/exclude`, so it is never committed. Running `cu setup` again refreshes the section
-and leaves the rest of the file alone.
+**1. Rules in the repo (every agent).** `cu setup` writes the same short instructions for each agent, all kept out
+of git:
+
+| Agent | File |
+|---|---|
+| Claude Code | `CLAUDE.local.md` |
+| Cursor | `.cursor/rules/cusync.mdc` |
+| Codex, GitHub Copilot, Windsurf and other `AGENTS.md` readers | `AGENTS.md` (skipped if your repo already tracks one) |
+
+**2. Claude Code plugin.** It adds a `clickup` skill, the MCP tools below, and a session hook that tells Claude which
+task is current when a session starts. Run this once inside Claude Code:
+
+```
+/plugin install cusync --marketplace twahanur/cu-clickup
+```
+
+On older Claude Code versions: `/plugin marketplace add twahanur/cu-clickup`, then `/plugin install cusync@cusync`.
+
+**3. MCP server (Cursor, Claude Desktop, Windsurf, VS Code and any MCP client).** Your agent calls ClickUp tools
+directly instead of typing commands. `cu agents` adds it to Cursor for you and prints the config for other clients:
+
+```json
+{ "mcpServers": { "cusync": { "command": "npx", "args": ["-y", "cusync", "mcp"] } } }
+```
+
+| Tool | Does |
+|---|---|
+| `clickup_plan_day` | Creates today's tasks in todo |
+| `clickup_start_task` | Finds or creates a task, moves it to in progress, makes it current |
+| `clickup_comment` | Posts a progress note |
+| `clickup_finish_task` | Posts a summary, moves to in review |
+| `clickup_block_task` | Moves to blocked with the reason |
+| `clickup_pr` | Links a pull request, moves to in review |
+| `clickup_set_status` | Sets any status |
+| `clickup_add_task` / `clickup_report_bug` | Creates a task, subtask or bug |
+| `clickup_my_tasks` / `clickup_team` / `clickup_show_task` / `clickup_where` | Reads: your tasks, who does what, one task, setup |
+
+Each tool takes an optional `repo_path` for agents that work across several projects.
+
+**What agents do on their own.** They change only your own tasks, tell you in one line what they changed, never mark
+a task done until you confirm it is merged and tested, and ask you to run `npx cusync` if a repo is not set up yet.
+The token never reaches the agent: the tools run locally with the token on your machine.
 
 ## Configuration
 
@@ -202,7 +244,8 @@ Everything lives in `~/.config/clickup/`:
 | `queue.json` | Commit logs waiting to be sent |
 | `hooks/` | The git hook scripts used by linked repos |
 
-Each linked repository gets only local git settings: `clickup.space`, `clickup.workspace` and `core.hooksPath`.
+Each linked repository gets only local git settings (`clickup.space`, `clickup.workspace`, `clickup.spacename`,
+`core.hooksPath`) and the git-ignored agent rule files listed above.
 
 | Environment variable | Purpose |
 |---|---|
@@ -247,10 +290,13 @@ Found a security problem? See [SECURITY.md](SECURITY.md).
 git config --unset core.hooksPath
 git config --unset clickup.space
 git config --unset clickup.workspace
-rm CLAUDE.local.md          # or remove only the "clickup" section
+git config --unset clickup.spacename
+rm -f CLAUDE.local.md .cursor/rules/cusync.mdc   # or remove only the "cusync" section
+# AGENTS.md: remove the section between <!-- cusync:start --> and <!-- cusync:end -->
 
 npm uninstall -g cusync
 rm -rf ~/.config/clickup
+# Cursor: remove "cusync" from ~/.cursor/mcp.json · Claude Code: /plugin uninstall cusync
 ```
 
 ## Development

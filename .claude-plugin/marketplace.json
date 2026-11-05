@@ -1,0 +1,14 @@
+{
+  "name": "cusync",
+  "description": "cusync: ClickUp from your terminal, git and AI agents",
+  "owner": { "name": "Twahanur Rahman" },
+  "plugins": [
+    {
+      "name": "cusync",
+      "description": "Keep ClickUp in sync while you code: your AI plans the day, starts and finishes tasks, logs commits and answers who is working on what.",
+      "version": "1.2.0",
+      "source": "./",
+      "author": { "name": "Twahanur Rahman" }
+    }
+  ]
+}
