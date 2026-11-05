@@ -92,8 +92,6 @@ git settings and hooks, and a git-ignored `CLAUDE.local.md` is written for Claud
 
 ### Your first day
 
-
-
 ```bash
 cu today "Login page" "Password reset email"   # plan the day: two tasks in todo
 cu start "Login page"                           # in progress, now the current task
