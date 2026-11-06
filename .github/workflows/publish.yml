@@ -1,0 +1,61 @@
+name: publish
+
+# Pushing a tag like v1.3.2 publishes that version to npm with provenance.
+# Authentication is npm trusted publishing (OIDC), so no npm token exists anywhere.
+# The trusted publisher on npmjs.com is bound to this file name: rename it there too.
+
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: read
+
+env:
+  CI: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # lets npm verify this workflow and sign the provenance statement
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      - name: Require a npm version with trusted publishing
+        run: npm install -g npm@11.21.2
+
+      - name: Check the tag matches package.json and is on main
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          if [ "$TAG" != "v$version" ]; then
+            echo "::error::tag $TAG does not match package.json version $version"
+            exit 1
+          fi
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+            echo "::error::tag $TAG is not on main"
+            exit 1
+          fi
+
+      - name: Set git identity (tests create temp repos and commit)
+        run: |
+          git config --global user.email "ci@example.com"
+          git config --global user.name "CI"
+          git config --global init.defaultBranch main
+
+      - name: Run tests
+        run: npm test
+
+      - name: Publish with provenance
+        run: npm publish --provenance --access public
