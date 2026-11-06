@@ -12,6 +12,19 @@ You will get an answer within a few days, and a fix is released as soon as possi
 
 Only the latest published version receives security fixes. Update with `npm i -g clickup-flow@latest`.
 
+## Verifying a release
+
+From 1.3.2 on, each version is published by GitHub Actions with npm provenance, which links it to the commit and workflow that built it. To check an installed copy, run `npm audit signatures` in the project that depends on it.
+
+## Network access
+
+`cu` has no dependencies and talks only to these hosts:
+
+- `api.clickup.com`: your ClickUp data, using your token
+- `registry.npmjs.org`: the daily update check, turned off with `update_check off`
+- `hooks.slack.com`: only the Slack webhook you configure
+- `api.github.com`: only in the merged-PR GitHub Action, if you install it
+
 ## Scope
 
 `cu` handles a ClickUp API token and writes git hooks, so the following are in scope:
