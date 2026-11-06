@@ -8,7 +8,7 @@
     {
       "name": "clickup-flow",
       "description": "Keep ClickUp in sync while you code: your AI plans the day, starts and finishes tasks, logs commits and answers who is working on what.",
-      "version": "1.3.2",
+      "version": "1.3.3",
       "source": "./",
       "author": {
         "name": "Twahanur Rahman"

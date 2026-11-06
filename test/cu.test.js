@@ -83,3 +83,28 @@ test("shQuote survives quotes, spaces and $ in sh", () => {
     assert.equal(execFileSync("sh", ["-c", `printf %s ${shQuote(v)}`], { encoding: "utf8" }), v);
   }
 });
+
+test("onPath ignores the temporary bin dir npx puts on PATH", async () => {
+  const fs = await import("node:fs");
+  const os = await import("node:os");
+  const path = await import("node:path");
+  const { onPath } = await import("../lib/cu.js");
+  if (process.platform === "win32") return;
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "cu-onpath-"));
+  const npxBin = path.join(root, ".npm", "_npx", "abc123", "node_modules", ".bin");
+  const realBin = path.join(root, "global", "bin");
+  for (const d of [npxBin, realBin]) fs.mkdirSync(d, { recursive: true });
+  const fake = path.join(npxBin, "cu-onpath-probe");
+  fs.writeFileSync(fake, "#!/bin/sh\n", { mode: 0o755 });
+  const old = process.env.PATH;
+  try {
+    process.env.PATH = [npxBin, "/usr/bin", "/bin"].join(path.delimiter);
+    assert.equal(onPath("cu-onpath-probe"), null, "a binary only npx provides is not installed");
+    fs.copyFileSync(fake, path.join(realBin, "cu-onpath-probe"));
+    process.env.PATH = [npxBin, realBin, "/usr/bin", "/bin"].join(path.delimiter);
+    assert.equal(onPath("cu-onpath-probe"), path.join(realBin, "cu-onpath-probe"));
+  } finally {
+    process.env.PATH = old;
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});

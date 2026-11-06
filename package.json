@@ -1,6 +1,6 @@
 {
   "name": "clickup-flow",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Keep ClickUp in sync from your terminal, git and AI agents (Claude Code, Cursor, MCP): plan the day, start/finish tasks, log every commit, see who works on what.",
   "type": "module",
   "bin": {
